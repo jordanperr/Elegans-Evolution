@@ -1,0 +1,114 @@
+#!/usr/bin/python
+
+
+
+EMAIL = ""
+HOST = ""
+PASS = ""
+STATUSCHECK_FREQ = 2
+
+
+import sys, os
+from plistlib import writePlist
+
+if len(sys.argv) == 1:
+    print """
+
+xgrid_batch.py by Jordan Perr - 2011
+
+Usage:
+\t./xgrid_batch taskName numberOfTasks outputDirectory command arg1 arg2...
+
+Special Arguments:
+\tXG_SEQ:  A unique integer for this task, sequential, starting at 0
+\tXG_SEED: Seconds since the unix epoch + XG_SEQ. Guaranteed to be unique.
+
+Configuration:
+\tInfrequently changed parameters such as your email address, the xgrid host, and xgrid password are located at the head of this script and should be modified by the user.
+
+Dependencies:
+\tPython2.6-2.7 (probably won't work with 3.x)
+\txgrid command line utility
+
+Notes:
+\t-Use relative paths to CWD. This is true for command, as well as any file arguments.
+
+\t-Any files written by your simulation MUST HAVE UNIQUE NAMES ACCROSS ALL JOBS. You should use XG_SEQ or XG_SEED in all file names written by your simulation. This is just how xgrid's batch command works. If two tasks produce files with identical names, one of them will be overwritten by xgrid's result collection.
+
+\t-xgrid.plist will be written to outputDirectory. You can ignore this file and delete it once the simulation is complete.
+
+
+"""
+    sys.exit(0)
+
+# Create XGRID batch plist file in output directory
+import time
+
+email = EMAIL
+task_name = sys.argv[1]
+num_tasks = int(sys.argv[2])
+output_path = os.path.abspath(sys.argv[3])
+command_path = sys.argv[4]
+arguments = sys.argv[5:]
+
+tasks = dict()
+t = int(time.time())
+for i in range(num_tasks):
+    tasks["task%d"%(i)] = {
+        "command": command_path,
+        "arguments": [b.replace("XG_SEED", str(t+i)) for b in [a.replace("XG_SEQ", str(i)) for a in arguments]]
+    }
+
+files = dict()
+files[command_path] = {"filePath": os.path.abspath(command_path)}
+for arg in arguments:
+    if os.path.exists(os.path.abspath(arg)):
+        files[arg] = {"filePath": os.path.abspath(arg)}
+
+p = [{
+    "name": task_name,
+    "notificationEmail": email,
+    "inputFiles": files,
+    "taskSpecifications": tasks
+}]
+
+writePlist(p, os.path.join(output_path, "xgrid.plist"))
+
+
+# Spawn XGRID job using the batch file
+import subprocess, re
+
+xgrid = ["xgrid", "-h", HOST, "-p", PASS, "-job"]
+batch, error = subprocess.Popen(xgrid+["batch", os.path.join(output_path, "xgrid.plist")], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+jobId = re.findall("\d+", batch)[0]
+print "jobid = %s"%(jobId)
+print "status will be checked every %d seconds."%(STATUSCHECK_FREQ)
+
+
+# Keep checking status until it either fails or finishes
+while True:
+    attributes, error = subprocess.Popen(xgrid+["attributes", "-id", jobId], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+    match = re.search(r"jobStatus = (\w+);", attributes)
+    print "%s -- Job %s status: %s"%(time.asctime(), jobId, match.group(1))
+    if match.group(1) == "Finished":
+        break
+    if match.group(1) == "Failed":
+    	print "Job Failed. Check it out and delete it yourself."
+    	sys.exit(0)
+    time.sleep(STATUSCHECK_FREQ)
+
+
+# Collect results
+print "Collecting results... ",
+collecting, error = subprocess.Popen(xgrid+["results", "-out", output_path, "-id", jobId], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+print "Done"
+
+# Delete job
+print "Deleting job... ",
+delete, error = subprocess.Popen(xgrid+["delete", "-id", jobId], stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
+print "Done."
+
+
+print "I hope you find something interesting in there!"
+
+

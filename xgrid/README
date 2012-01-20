@@ -1,0 +1,20 @@
+xgrid batch submission and monitoring script
+Jordan Perr-Sauer 2011
+___________________________________
+
+Dependencies:
+ - xgrid
+ - python 2.x
+
+___________________________________
+
+Todo:
+ - More graceful error and xgrid failure handline
+ - Ability to resume monitoring a job
+ - Figure out why batch jobs tend to fail more often
+   than single task jobs.
+
+___________________________________
+
+Usage:
+ - run xgrid_batch with no arguments for help

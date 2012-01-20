@@ -1,0 +1,84 @@
+#include <iostream>
+#include <math.h>
+#include "random.h"
+
+#define TRIALS 1
+#define TIMESTEP 0.01
+#define MAXTIME 1000
+#define PRINTSTEP 100
+
+double Vavb;
+RandomState r(0);
+
+class brydenNeuron {
+public:
+	double V;
+	double G, Gavb;
+	double outWeight, outK, outThresh;
+	double inWeight, inK, inThresh, inOffset;
+
+	/* updates voltage given input theta for one timestep */
+	void update(double theta) {
+		double sigmoidStretch = inOffset + inWeight / (1+exp(-inK*(theta-inThresh))); // input sigmoid
+		V += (-(G*V)+(Gavb*Vavb)+sigmoidStretch)*TIMESTEP; // neuron equation
+	}
+
+	/* updates returns sigmoided output of internal voltage */
+	double output() {
+		return outWeight / (1+exp(-outK*(V-outThresh))); // output sigmoid
+	}
+
+};
+
+int main(void){
+	// Setup global environment vars for all neurons (AVB)
+	Vavb = 0.0681772;
+	// Create two neurons, set constants from thesis
+	brydenNeuron v;
+	v.G 	    = 0.0763872;
+	v.Gavb 	    = 1.0;
+	v.outWeight = 0.300856;
+	v.outK	    = 6.73015;
+	v.outThresh = 0.261856;
+	v.inWeight  = -0.926282;
+	v.inK	    = 18.0146;
+	v.inThresh  = 0.264553;
+	v.inOffset  = 0.00432253;
+	brydenNeuron d;
+	d.G 	    = 0.0528187;
+	d.Gavb 	    = 1.0;
+	d.outWeight = -0.300856;
+	d.outK	    = 9.572;
+	d.outThresh = 0.706734;
+	d.inWeight  = 0.770831;
+	d.inK	    = 19.8444;
+	d.inThresh  = 0.12074;
+	d.inOffset  = -0.54527;
+	double theta = 0;
+	
+	// enter simulation loop
+	for(int trialNum = 0; trialNum < TRIALS; trialNum++) {
+		cout << "# TRIAL " << (trialNum+1) << endl;
+		//randomize voltages in motor neurons and initialize theta
+		//v.V = r.UniformRandom(-0.5, 0.5);
+		//d.V = r.UniformRandom(-0.5, 0.5);
+		v.V = 0;
+		d.V = 0;
+		theta = -0.1;
+		cout << "# v.V="<<v.V<<" d.V="<<d.V<<endl;
+		int i = 0;
+		for(double trialTime = 0; trialTime <= MAXTIME; trialTime += TIMESTEP) {
+			// update neuron state
+			v.update(theta);
+			d.update(theta);
+			// update theta given new neuron state
+			theta += (v.output() + d.output())*TIMESTEP;
+			if(i%PRINTSTEP == 0){
+				cout << trialTime<<"      "<<theta<< "          "<<v.output()<<"      "<<d.output()<<endl;
+				i = 1;
+			}
+			i++;
+		}
+	}
+		
+}

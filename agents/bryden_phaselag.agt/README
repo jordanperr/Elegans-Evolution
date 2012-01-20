@@ -1,0 +1,15 @@
+bryden_segment phase lagged oscillator
+Jordan Perr-Sauer 2011
+_____________________________
+
+This code evolves many 2 neuron
+segments with self connections to
+oscillate with a lagged phase. 
+
+This is one representative sample
+out of many tests. I did not package
+the other tests, but can dig them up
+upon request.
+
+______________________________
+

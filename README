@@ -1,0 +1,76 @@
+Elegans Evolution
+Jordan Perr-Sauer
+July 2011
+
+Thanks To:
+Professor Randall Beer and Dr. Eduardo Izquierdo
+Indiana University, Bloomington
+Dept. Cognitive Science
+
+
+
+========== TO BUILD ==========
+
+  Run "make all" to build all agents.
+
+  There are GNU Make directives for every agent in ./agents/
+   Run "make agent_name.agt" in the repository root.
+   The executable will be in ./build/
+
+  More information about each agent can be found in their
+   respective README files.
+
+
+
+========== EVOLVING AN AGENT ON XGRID ==========
+
+  Build desired agent normally.
+  Use the script located in ./xgrid to run agent on xgrid
+
+
+
+========== EVOLVING AN AGENT ON CONDOR ==========
+
+  NOT YET SUPPORTED
+  
+
+
+========== AGENTS ==========
+
+- linear_distance
+    LinearBody CTRNN evolver for horizontal distance.
+
+- lagged_sinudoid
+    LinearBody simulator with phase lagged sinusoid inputs to muscles.
+
+- bryden_oscillation
+    Implementation of single segment oscillator from (Bryden).
+
+- bryden_phaselag
+    Implementation of multiple, phase lagged (Bryden) oscillators.
+
+
+
+========== LIBRARIES ==========
+
+- LinearBody
+    C Elegans body simulator with CTRNN controlled actuation and evolution.
+
+- Beer
+    Evolutionary Agents classes from Professor Randall Beer
+
+
+
+========== PLANS ==========
+
+   - Add RK4 or Verlet integration to LinearBody
+
+   - Implement klinotaxis as described by (Izquierdo)
+
+
+
+========== REFERENCES ==========
+
+    Bryden, J., & Cohen, N. (2004). A simulation model of the locomotion controllers for the nematode Caenorhabditis elegans. From Animals to Animats 8: Proceedings of the Eighth International Conference on the Simulation of Adaptive Behavior (pp. 183–192). MIT Press. Retrieved from http://eprints.whiterose.ac.uk/7961/
+
+    Izquierdo, E. J., & Lockery, S. R. (2010). Evolution and Analysis of Minimal Neural Circuits for Klinotaxis in Caenorhabditis elegans. Journal of Neuroscience, 30(39), 12908-12917. doi:10.1523/JNEUROSCI.2606-10.2010

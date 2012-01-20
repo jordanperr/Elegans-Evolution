@@ -1,0 +1,14 @@
+bryden_segment oscillator
+Jordan Perr-Sauer 2011
+_____________________________
+
+This code evolves as 2 neuron segment
+with self connections to oscillate.
+
+This is one representative sample
+out of many tests. I did not package
+the other tests, but can dig them up
+upon request.
+
+______________________________
+
