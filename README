@@ -11,10 +11,10 @@ Dept. Cognitive Science
 
 ========== TO BUILD ==========
 
-  Run "make all" to build all agents.
+  Run "make all" to build all simulations.
 
-  There are GNU Make directives for every agent in ./agents/
-   Run "make agent_name.agt" in the repository root.
+  There are GNU Make directives for every simulation.
+   Run "make simulation_name.sim" in the repository root.
    The executable will be in ./build/
 
   More information about each agent can be found in their
@@ -22,10 +22,10 @@ Dept. Cognitive Science
 
 
 
-========== EVOLVING AN AGENT ON XGRID ==========
+========== RUNNING A SIMULATION ON XGRID ==========
 
   Build desired agent normally.
-  Use the script located in ./xgrid to run agent on xgrid
+  Use the script located in ./xgrid
 
 
 
@@ -35,18 +35,18 @@ Dept. Cognitive Science
   
 
 
-========== AGENTS ==========
+========== SIMULATIONS ==========
 
-- linear_distance
+- linear_distance.sim
     LinearBody CTRNN evolver for horizontal distance.
 
-- lagged_sinudoid
+- lagged_sinudoid.sim
     LinearBody simulator with phase lagged sinusoid inputs to muscles.
 
-- bryden_oscillation
+- bryden_oscillation.sim
     Implementation of single segment oscillator from (Bryden).
 
-- bryden_phaselag
+- bryden_phaselag.sim
     Implementation of multiple, phase lagged (Bryden) oscillators.
 
 

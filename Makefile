@@ -1,19 +1,18 @@
-AGENTS = ./agents
 LIB_PATH = ./lib
 CC = g++
 LIB_OBJ = CTRNN.o LinearBody.o random.o TSearch.o
 VPATH = lib
 
-all: library bryden_oscillation.agt bryden_phaselag.agt lagged_sinusoid.agt linear_distance.agt clean
+all: library bryden_oscillation.sim bryden_phaselag.sim lagged_sinusoid.sim linear_distance.sim clean
 	@ echo Look in ./build/
 
-# Agents
+# Simulations
 
-%.agt:
+%.sim:
 	@ echo Building $@
-	@ cd $(AGENTS)/$@; $(CC) -o $@ -I../../lib *.cpp $(addprefix ../../lib/, $(LIB_OBJ))
+	@ cd ./simulations/$@; $(CC) -o $@ -I../../lib *.cpp $(addprefix ../../lib/, $(LIB_OBJ))
 	@ mkdir -p build
-	@ mv $(AGENTS)/$@/$@ build
+	@ mv ./simulations/$@/$@ build
 
 # Library
 
