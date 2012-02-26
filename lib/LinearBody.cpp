@@ -140,62 +140,6 @@ void LinearBody::UpdateForces()
 
 }
 
-bool LinearBody::DeathCheck()
-{
-	if (!dead)
-		for (SEGMENTS_i)
-			if (fabs(f_bendingAngle_delta[i]) > M_PI)
-				dead = true;
-	return dead;
-
-}
-
-// Integrate forces into positions using a simple euler step.
-// You should really keep the timestep <0.01 for this type of integration.
-int LinearBody::EulerStep()
-{
-	// Recalculate all forces
-	UpdateForces();
-
-	// Check if we're dead. Return with error if already dead.
-	if (DeathCheck())
-		return 1;
-
-	// Apply simple euler step using new forces
-	for (ALLNODES_i) {
-		// update velocity    a = F / m
-		nodes[i].v.x += (nodes[i].a.x)*timestep;
-		nodes[i].v.y += (nodes[i].a.y)*timestep;
-		// update posiiton
-		nodes[i].p.x += (nodes[i].v.x)*timestep;
-		nodes[i].p.y += (nodes[i].v.y)*timestep;
-	}
-
-	return 0;
-}
-
-// Integrate forces into positions using RK4 step
-int LinearBody::RK4Step()
-{
-	
-	// Recalculate all forces
-	double realTimestep = timestep;
-	timestep /= 2;
-	UpdateForces();
-
-	// Check if dead
-	if (DeathCheck())
-		return 1;
-
-	// Apply RK4 Step using new forces
-	for (ALLNODES_i) {
-		
-	}
-	
-	return 0;
-}
-
-
 
 /*********** FORCE BOOKKEEPING METHODS ***********/
 
